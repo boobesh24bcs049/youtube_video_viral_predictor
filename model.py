@@ -13,6 +13,13 @@ DOW_MAP = {
     "Thursday":3, "Friday":4, "Saturday":5, "Sunday":6
 }
 
+CAT_COLS = [
+    'cat_Autos', 'cat_Comedy', 'cat_Education', 'cat_Entertainment',
+    'cat_Film', 'cat_Gaming', 'cat_Howto', 'cat_Music', 'cat_News',
+    'cat_Nonprofits', 'cat_Other', 'cat_People', 'cat_Pets',
+    'cat_Science', 'cat_Sports', 'cat_Travel'
+]
+
 def build_features(data: dict, FEATURES: list) -> pd.DataFrame:
     row = {f: 0 for f in FEATURES}
 
@@ -25,7 +32,7 @@ def build_features(data: dict, FEATURES: list) -> pd.DataFrame:
     dow           = DOW_MAP[data['publish_day']]
     cat_id        = CAT_MAP[data['category']]
 
-    # Base
+    # Base features
     row['category_id']       = cat_id
     row['views']             = views
     row['dislikes']          = dislikes
@@ -36,21 +43,25 @@ def build_features(data: dict, FEATURES: list) -> pd.DataFrame:
     row['publish_dayofweek'] = dow
     row['publish_month']     = publish_month
 
-    # Engineered
-    row['log_views']        = np.log1p(views)
-    row['dislike_ratio']    = dislikes / (views + 1)
-    row['short_title']      = 1 if len(title) <= 40 else 0
-    row['has_question']     = 1 if '?' in title else 0
-    row['has_exclamation']  = 1 if '!' in title else 0
-    row['caps_ratio']       = sum(1 for w in title.split() if w.isupper()) / max(len(title.split()), 1)
-    row['is_weekend']       = 1 if dow >= 5 else 0
-    row['peak_hour']        = 1 if 14 <= publish_hour <= 20 else 0
+    # Engineered features
+    row['log_views']         = np.log1p(views)
+    row['dislike_ratio']     = dislikes / (views + 1)
+    row['short_title']       = 1 if len(title) <= 40 else 0
+    row['has_question']      = 1 if '?' in title else 0
+    row['has_exclamation']   = 1 if '!' in title else 0
+    row['caps_ratio']        = sum(1 for w in title.split() if w.isupper()) / max(len(title.split()), 1)
+    row['is_weekend']        = 1 if dow >= 5 else 0
+    row['peak_hour']         = 1 if 14 <= publish_hour <= 20 else 0
     row['comments_disabled'] = 0
     row['ratings_disabled']  = 0
 
-    # One-hot category
+    # One-hot category — explicitly set correct column
     cat_col = f"cat_{data['category']}"
     if cat_col in row:
         row[cat_col] = 1
 
-    return pd.DataFrame([row])[FEATURES]
+    # Build DataFrame with exact feature order
+    df = pd.DataFrame([row])
+    df = df[FEATURES]  # enforce exact column order the model expects
+
+    return df
