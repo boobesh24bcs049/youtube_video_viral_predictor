@@ -67,13 +67,13 @@ def predict(video: VideoInput):
     X    = build_features(video.model_dump(), FEATURES)
     prob = round(float(model.predict_proba(X)[0][1]), 4)
 
-    # Threshold 0.5 — best F1 score confirmed
-    label = "viral" if prob >= 0.5 else "not_viral"
+    # Change this line in predict()
+    label = "viral" if prob >= 0.27 else "not_viral"
 
     return {
         "prediction":        label,
         "viral_probability": prob,
-        "confidence":        "high"   if prob > 0.75 or prob < 0.25 else "medium",
+        "confidence": "high"   if prob > 0.40 else "medium" if prob > 0.27 else "low",
         "verdict":           "🔥 This video has strong viral potential!" if label == "viral"
                              else "📉 Low viral potential. Try Music category, 15M+ views, low dislikes.",
         "input_summary": {
