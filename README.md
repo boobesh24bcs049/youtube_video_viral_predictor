@@ -167,3 +167,6 @@ Swagger docs at `http://localhost:8000/docs`
 
 **Boobesh**  
 [LinkedIn](https://www.linkedin.com/in/boobesh-k-24bcs049)
+**Live API:** https://youtube-video-viral-predictor.onrender.com  
+**Swagger Docs:** https://youtube-video-viral-predictor.onrender.com/docs  
+**Health Check:** https://youtube-video-viral-predictor.onrender.com/health
