@@ -166,4 +166,4 @@ Swagger docs at `http://localhost:8000/docs`
 ## 👤 Author
 
 **Boobesh**  
-[GitHub](https://github.com/your-username) · [LinkedIn](https://linkedin.com/in/your-profile)
+[LinkedIn](https://www.linkedin.com/in/boobesh-k-24bcs049)
