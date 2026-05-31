@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, validator
 import os
 import warnings
 import joblib
@@ -10,7 +10,7 @@ from model import build_features, CAT_MAP, DOW_MAP
 # ── Suppress sklearn version mismatch warnings ──────────
 warnings.filterwarnings("ignore", category=InconsistentVersionWarning)
 
-# ── Load model using absolute path relative to BASE_DIR ─
+# ── Load model using absolute path ─────────────────────
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 model    = joblib.load(os.path.join(BASE_DIR, 'rf_model.pkl'))
 FEATURES = joblib.load(os.path.join(BASE_DIR, 'features.pkl'))
@@ -28,18 +28,32 @@ app.add_middleware(
     allow_headers=["*"]
 )
 
-# ── Request schema ─────────────────────────────────────
+# ── Request schema ──────────────────────────────────────
 class VideoInput(BaseModel):
-    title:         str   = "10 Things You Didn't Know About Space"
-    category:      str   = "Education"
-    views:         int   = 500000
-    dislikes:      int   = 1000
-    tag_count:     int   = 15
-    publish_hour:  int   = 15
-    publish_day:   str   = "Friday"
-    publish_month: int   = 6
+    title:         str = "Official Music Video"
+    category:      str = "Music"
+    views:         int = 20000000
+    dislikes:      int = 23000
+    tag_count:     int = 6
+    publish_hour:  int = 15
+    publish_day:   str = "Friday"
+    publish_month: int = 11
 
-# ── Routes ─────────────────────────────────────────────
+    @validator('category')
+    def category_must_be_valid(cls, v):
+        valid = list(CAT_MAP.keys())
+        if v not in valid:
+            raise ValueError(f"category must be one of: {valid}")
+        return v
+
+    @validator('publish_day')
+    def day_must_be_valid(cls, v):
+        valid = list(DOW_MAP.keys())
+        if v not in valid:
+            raise ValueError(f"publish_day must be one of: {valid}")
+        return v
+
+# ── Routes ──────────────────────────────────────────────
 @app.get("/")
 def root():
     return {"message": "YouTube Viral Predictor API is live 🎬"}
@@ -50,18 +64,23 @@ def health():
 
 @app.post("/predict")
 def predict(video: VideoInput):
-    X = build_features(video.model_dump(), FEATURES)
-    prob  = round(float(model.predict_proba(X)[0][1]), 4)
+    X    = build_features(video.model_dump(), FEATURES)
+    prob = round(float(model.predict_proba(X)[0][1]), 4)
+
+    # Threshold 0.5 — best F1 score confirmed
     label = "viral" if prob >= 0.5 else "not_viral"
 
     return {
-        "prediction":       label,
+        "prediction":        label,
         "viral_probability": prob,
-        "confidence":       "high" if prob > 0.75 or prob < 0.25 else "medium",
+        "confidence":        "high"   if prob > 0.75 or prob < 0.25 else "medium",
+        "verdict":           "🔥 This video has strong viral potential!" if label == "viral"
+                             else "📉 Low viral potential. Try Music category, 15M+ views, low dislikes.",
         "input_summary": {
-            "title":    video.title,
-            "category": video.category,
-            "views":    video.views
+            "title":        video.title,
+            "category":     video.category,
+            "views":        video.views,
+            "dislike_ratio": round(video.dislikes / (video.views + 1), 6)
         }
     }
 
