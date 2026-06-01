@@ -235,4 +235,4 @@ print(response.json())
 ## 👤 Author
 
 **Boobesh**  
-[GitHub](https://github.com/boobesh24bcs049) · [LinkedIn](https://www.linkedin.com/in/boobesh-k-24bcs049)
+[LinkedIn](https://www.linkedin.com/in/boobesh-k-24bcs049)
