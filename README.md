@@ -1,4 +1,4 @@
-# 🎬 YouTube Viral Post Predictor
+# YouTube Viral Post Predictor
 
 A machine learning REST API that predicts whether a YouTube video will go viral based on metadata — built with Random Forest, FastAPI, and deployed live on Render.
 
@@ -10,7 +10,7 @@ A machine learning REST API that predicts whether a YouTube video will go viral 
 
 ---
 
-## 📌 Problem Statement
+## Problem Statement
 
 Predict whether a YouTube video will go viral (top 10% by engagement rate) **before it trends** — using only metadata available at upload time, with zero data leakage.
 
@@ -23,7 +23,7 @@ viral = 0  otherwise
 
 ---
 
-## 📊 Dataset
+## Dataset
 
 - **Source:** [YouTube Trending Video Statistics — Kaggle](https://www.kaggle.com/datasets/datasnaek/youtube-new)
 - **File used:** `USvideos.csv`
@@ -32,7 +32,7 @@ viral = 0  otherwise
 
 ---
 
-## 🔍 Key EDA Findings
+## Key EDA Findings
 
 | Insight | Finding |
 |---|---|
@@ -45,7 +45,7 @@ viral = 0  otherwise
 
 ---
 
-## ⚙️ Feature Engineering
+## Feature Engineering
 
 Features engineered from raw metadata (no post-upload leakage):
 
@@ -63,11 +63,11 @@ Features engineered from raw metadata (no post-upload leakage):
 | `tag_count` | Number of tags used |
 | `cat_*` | One-hot encoded category (16 categories) |
 
-> ⚠️ `likes` and `comment_count` were intentionally excluded — they constitute **data leakage** as they are only known after a video trends.
+> `likes` and `comment_count` were intentionally excluded — they constitute **data leakage** as they are only known after a video trends.
 
 ---
 
-## 🏆 Feature Importance (Top 10)
+## Feature Importance (Top 10)
 
 | Feature | Importance |
 |---|---|
@@ -82,24 +82,24 @@ Features engineered from raw metadata (no post-upload leakage):
 | `dislikes` | 0.0619 |
 | `category_id` | 0.0528 |
 
-> 💡 Key insight: The model is primarily title-driven. Title length, caps usage, and punctuation matter more than category or raw view count.
+> Key insight: The model is primarily title-driven. Title length, caps usage, and punctuation matter more than category or raw view count.
 
 ---
 
-## 🤖 Model Comparison
+## Model Comparison
 
 | Model | ROC-AUC | F1 (viral) |
 |---|---|---|
 | Logistic Regression | 0.7850 | 0.3188 |
 | Decision Tree | 0.7981 | 0.3488 |
 | XGBoost | 0.9497 | 0.6191 |
-| **Random Forest** ✅ | **0.9516** | **0.6635** |
+| **Random Forest**  | **0.9516** | **0.6635** |
 
 All models trained with `class_weight='balanced'` to handle the 90/10 class imbalance.
 
 ---
 
-## ⚠️ Model Behaviour Note
+## Model Behaviour Note
 
 The Random Forest outputs conservative probabilities (max ~0.35) because YouTube virality is driven by factors not fully captured in metadata alone — content quality, creator fanbase, thumbnail design, and external sharing all play a role. Threshold tuned to 0.20 based on F1/Recall tradeoff analysis across multiple thresholds.
 
@@ -112,7 +112,7 @@ The Random Forest outputs conservative probabilities (max ~0.35) because YouTube
 
 ---
 
-## 🚀 API Endpoints
+## API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
@@ -146,7 +146,7 @@ curl -X POST "https://youtube-video-viral-predictor.onrender.com/predict" \
   "prediction": "viral",
   "viral_probability": 0.2773,
   "confidence": "medium",
-  "verdict": "🔥 This video has strong viral potential!",
+  "verdict": " This video has strong viral potential!",
   "input_summary": {
     "title": "Official Music Video",
     "category": "Music",
@@ -165,7 +165,7 @@ Comedy, Entertainment, News, Howto, Education, Science, Nonprofits
 
 ---
 
-## 🗂️ Project Structure
+## Project Structure
 
 ```
 viral_predictor/
@@ -179,7 +179,7 @@ viral_predictor/
 
 ---
 
-## 🛠️ Run Locally
+## Run Locally
 
 ```bash
 git clone https://github.com/boobesh24bcs049/youtube_video_viral_predictor
@@ -193,7 +193,7 @@ Swagger docs at `http://localhost:8000/docs`
 
 ---
 
-## 🐍 Call the API from Python
+## Call the API from Python
 
 ```python
 import requests
@@ -217,7 +217,7 @@ print(response.json())
 
 ---
 
-## 📦 Tech Stack
+## Tech Stack
 
 - **ML:** scikit-learn, XGBoost, pandas, numpy
 - **API:** FastAPI, Uvicorn, Pydantic
@@ -226,7 +226,7 @@ print(response.json())
 
 ---
 
-## 📝 Resume Bullet
+## Resume Bullet
 
 > Built an end-to-end YouTube viral post prediction REST API using Random Forest (ROC-AUC: 0.9516), with feature engineering, intentional data leakage prevention, threshold tuning analysis, and deployed live via FastAPI on Render.
 
