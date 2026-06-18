@@ -232,7 +232,7 @@ print(response.json())
 
 ---
 
-## 👤 Author
+## Author
 
 **Boobesh**  
 [LinkedIn](https://www.linkedin.com/in/boobesh-k-24bcs049)
