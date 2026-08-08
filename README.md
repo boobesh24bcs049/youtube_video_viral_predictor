@@ -2,10 +2,7 @@
 
 A machine learning REST API that predicts whether a YouTube video will go viral based on metadata — built with Random Forest, FastAPI, and deployed live on Render.
 
-**Live API:** https://youtube-video-viral-predictor.onrender.com  
-**Swagger Docs:** https://youtube-video-viral-predictor.onrender.com/docs  
-**Health Check:** https://youtube-video-viral-predictor.onrender.com/health  
-**GitHub:** https://github.com/boobesh24bcs049/youtube_video_viral_predictor  
+**Live API:** https://youtube-video-viral-predictor.onrender.com 
 **Model:** Random Forest | **ROC-AUC:** 0.9516 | **F1 Score:** 0.6635
 
 ---
